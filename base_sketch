@@ -13,8 +13,7 @@ void initDisplay() {
 }
 
 void fullRefresh() {
-  display.fillScreen(GxEPD_WHITE);
-  display.refresh(false);
+  display.clearScreen();
 }
 
 void loop() {
