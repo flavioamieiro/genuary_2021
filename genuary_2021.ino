@@ -13,8 +13,7 @@ void initDisplay() {
 }
 
 void fullRefresh() {
-  display.fillScreen(GxEPD_WHITE);
-  display.refresh(false);
+  display.clearScreen();
 }
 
 void loop() {
@@ -22,15 +21,7 @@ void loop() {
     fullRefresh();
   }
   display.fillScreen(GxEPD_WHITE);
-  for (int x=0; x<40; x++){
-    for (int y=0; y<40; y++) {
-      uint16_t color = GxEPD_WHITE;
-      if (random(0, 10) >= 5) {
-        color = GxEPD_BLACK;  
-      }
-      display.fillRect(x*20, y*12, 20, 12, color);
-    }
-  }
+  // draw here.
   display.displayWindow(0, 0, display.width(), display.height());
   delay(1000);
   loop_count++;
