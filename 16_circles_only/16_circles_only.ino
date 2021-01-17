@@ -1,7 +1,9 @@
 #include <GxEPD2_BW.h>
 #include <FastLED.h>
-#define PIXEL_SIZE 20
-#define NOISE_SCALE 1.5
+#define PIXEL_SIZE 25
+#define NOISE_XSCALE 1
+#define NOISE_YSCALE 1
+#define NOISE_ZSCALE 3
 #define COLS (display.width()/PIXEL_SIZE)
 #define LINES (display.height()/PIXEL_SIZE)
 #define NUM_PIXELS (COLS*LINES)
@@ -11,15 +13,6 @@ int loop_count = 0;
 
 void setup() {
   initDisplay();
-  for (int i=0; i<NUM_PIXELS; i++) {
-    int col = i % COLS;
-    int line = i / COLS;
-    int x = PIXEL_SIZE/2 + col * (PIXEL_SIZE);
-    int y = PIXEL_SIZE/2 + line * (PIXEL_SIZE);
-    int r = inoise8(x*NOISE_SCALE, y*NOISE_SCALE);
-    drawPixel(x, y, r);
-  }
-  display.display();
 }
 
 void initDisplay() {
@@ -30,6 +23,7 @@ void initDisplay() {
 }
 
 void fullRefresh() {
+  display.clearScreen();
 }
 
 void drawPixel(int x, int y, int value) {
@@ -38,4 +32,19 @@ void drawPixel(int x, int y, int value) {
 }
 
 void loop() {
+  if (loop_count % 100 == 0) {
+    fullRefresh();
+  }
+
+  display.fillScreen(GxEPD_WHITE);
+  for (int i=0; i<NUM_PIXELS; i++) {
+    int col = i % COLS;
+    int line = i / COLS;
+    int x = PIXEL_SIZE/2 + col * (PIXEL_SIZE);
+    int y = PIXEL_SIZE/2 + line * (PIXEL_SIZE);
+    int r = inoise8(x*NOISE_XSCALE, y*NOISE_YSCALE, loop_count*NOISE_ZSCALE);
+    drawPixel(x, y, r);
+  }
+  display.displayWindow(0, 0, display.width(), display.height());
+  loop_count++;
 }
